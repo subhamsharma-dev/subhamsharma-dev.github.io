@@ -222,23 +222,25 @@ export const projects: Project[] = [
   {
     slug: 'vendor-compliance-portal',
     title: 'Vendor Compliance Portal',
-    tagline: 'Custom portal replacing manual compliance for 200+ vendors',
+    tagline: 'Self-service portal for vendor onboarding, creative approval, and audit-ready PDF reporting',
     category: ['Backend', 'Cloud', 'Full Stack'],
     year: '2025',
     featured: true,
     problem:
-      'Compliance tracking for 200+ vendors was manual, error-prone, and slow — the admin team was the bottleneck.',
+      'Compliance and creative-approval workflows for 200+ vendors were spread across email, a single Google Sheet, ad-hoc Google Drive uploads, and manually-linked Asana tasks — with one admin parsing emails and pasting fields into the sheet by hand. No validation, no notifications, no audit trail, no way to scale.',
     solution:
-      'FastAPI on ECS Fargate with role-based vendor and admin portals, automated email notifications, Lambda-based PDF generation, fully Terraform-provisioned infra.',
+      'Multi-tenant FastAPI portal on ECS Fargate with role-based access (admin + vendor). Vendors sign in, submit Creative Approval Requests with required fields (campaign, source, dates, creative type), and upload multiple files to S3. Admins review in a filterable dashboard (vendor, status, date, type, approver). Bi-directional comment threads handle revisions; the portal emails both sides at every step. On approval or rejection, the record locks for audit and a Lambda generates an audit-ready PDF report (request metadata + creative thumbnails), stored in S3 and listed in a Reports section. Terraform-provisioned end to end.',
     challenge:
-      "Modeling complex compliance workflows so non-technical vendors could self-serve without training.",
+      'Modeling the approval workflow so non-technical vendors could self-serve — multi-file uploads, validated submissions, comment loops, revision tracking, all without training. Generating audit-ready PDFs with thumbnails from heterogeneous file types. Email loops that keep both sides synced without spamming.',
     impact:
-      'Cut admin processing time by ~60% and gave vendors a self-service path to staying compliant.',
-    scale: '200+ vendors · automated PDF + email pipelines',
-    stack: ['FastAPI', 'Python', 'ECS Fargate', 'AWS Lambda', 'Terraform', 'PostgreSQL'],
+      'Cut admin processing time by ~60%. Replaced four separate tools (email, Google Sheets, Drive, Asana) with a single source of truth and a searchable, locked audit trail. 200+ vendors now self-serve.',
+    scale: '200+ vendors · S3-backed file storage · audit-ready PDF reporting · locked records',
+    stack: ['FastAPI', 'Python', 'ECS Fargate', 'AWS Lambda', 'S3', 'PostgreSQL', 'Terraform', 'Role-based auth'],
     metrics: [
       { label: 'Vendors', value: '200+' },
       { label: 'Admin time saved', value: '~60%' },
+      { label: 'Tools replaced', value: '4' },
+      { label: 'Audit trail', value: 'Locked' },
     ],
   },
 

@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { Github, Linkedin, Mail, PenSquare, Twitter } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { profile } from '@/data/content'
 
@@ -23,7 +23,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
-              Engineering production AI &amp; cloud systems at scale. Based in {profile.location}, open to senior roles globally.
+              Curious engineer building production AI &amp; cloud systems. Based in {profile.location}, open to new roles globally.
             </p>
           </div>
 
@@ -33,31 +33,38 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               <li><Link to="/" className="text-white/65 transition-colors hover:text-white">Home</Link></li>
               <li><Link to="/projects" className="text-white/65 transition-colors hover:text-white">Projects</Link></li>
-              <li><Link to="/resume" className="text-white/65 transition-colors hover:text-white">Resume</Link></li>
               <li><Link to="/contact" className="text-white/65 transition-colors hover:text-white">Contact</Link></li>
+              <li><a href={profile.resumeUrl} download className="text-white/65 transition-colors hover:text-white">Download CV</a></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <div className="text-[11px] uppercase tracking-[0.18em] text-white/40">Direct</div>
+            <div className="text-[11px] uppercase tracking-[0.18em] text-white/40">Find me</div>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <a href={`mailto:${profile.email}`} className="flex items-center gap-2 text-white/65 transition-colors hover:text-white">
-                  <Mail className="h-3.5 w-3.5" />
-                  Email
+                  <Mail className="h-3.5 w-3.5" /> Email
                 </a>
               </li>
               <li>
                 <a href={profile.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/65 transition-colors hover:text-white">
-                  <Linkedin className="h-3.5 w-3.5" />
-                  LinkedIn
+                  <Linkedin className="h-3.5 w-3.5" /> LinkedIn
                 </a>
               </li>
               <li>
                 <a href={profile.github} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/65 transition-colors hover:text-white">
-                  <Github className="h-3.5 w-3.5" />
-                  GitHub
+                  <Github className="h-3.5 w-3.5" /> GitHub
+                </a>
+              </li>
+              <li>
+                <a href={profile.twitter} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/65 transition-colors hover:text-white">
+                  <Twitter className="h-3.5 w-3.5" /> Twitter
+                </a>
+              </li>
+              <li>
+                <a href={profile.medium} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/65 transition-colors hover:text-white">
+                  <PenSquare className="h-3.5 w-3.5" /> Medium
                 </a>
               </li>
             </ul>
@@ -67,10 +74,10 @@ export default function Footer() {
         {/* Bottom strip */}
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/[0.06] pt-6 md:flex-row md:items-center">
           <p className="font-mono text-[11px] text-white/35">
-            © {new Date().getFullYear()} {profile.name}. Crafted with care.
+            © {new Date().getFullYear()} {profile.name}.
           </p>
           <p className="font-mono text-[11px] text-white/35">
-            Built with React · TypeScript · Tailwind · Framer Motion
+            React · TypeScript · Tailwind · Framer Motion · Three.js
           </p>
         </div>
       </div>

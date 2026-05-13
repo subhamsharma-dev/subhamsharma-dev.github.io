@@ -4,7 +4,7 @@ import { ArrowUpRight, Github, Star, X } from 'lucide-react'
 import { projects, type Project } from '@/data/content'
 import { cn } from '@/lib/cn'
 
-const CATEGORIES = ['All', 'AI', 'Cloud', 'Backend', 'Full Stack', 'Data'] as const
+const CATEGORIES = ['All', 'AI', 'Cloud', 'Backend', 'Full Stack', 'Data', 'Healthcare'] as const
 type Category = (typeof CATEGORIES)[number]
 
 export default function Projects({ showAll = false }: { showAll?: boolean }) {
@@ -29,10 +29,10 @@ export default function Projects({ showAll = false }: { showAll?: boolean }) {
               Selected Work
             </span>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-              Production systems, shipped.
+              Things I've <span className="text-gradient">built.</span>
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55 md:text-base">
-              Each project shipped to production at meaningful scale. Click any card for the architecture, challenges, and business impact.
+              A mix of AI platforms, cloud infrastructure, and backend systems — each shipped to production at meaningful scale. Click any card for the architecture, the trade-offs, and what I learned.
             </p>
           </div>
 

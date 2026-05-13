@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Download, MapPin, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { profile, heroStats } from '@/data/content'
-import NetworkGraph from './NetworkGraph'
+
+// Lazy-load three.js so it doesn't block the initial render
+const ParticleCloud = lazy(() => import('./ParticleCloud'))
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
@@ -79,7 +81,7 @@ export default function Hero() {
             >
               <span className="block text-gradient-subtle">{profile.name}</span>
               <span className="mt-2 block text-gradient">
-                Architecting Production AI &amp; Cloud Systems
+                Curious engineer.<br />Building things that ship.
               </span>
             </motion.h1>
 
@@ -91,7 +93,7 @@ export default function Hero() {
               className="mt-6 flex items-center gap-3"
             >
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/30">
-                Role
+                Open to
               </span>
               <span className="h-px w-6 bg-white/15" />
               <span className="font-mono text-sm text-accent-electric typing-cursor">
@@ -99,19 +101,17 @@ export default function Hero() {
               </span>
             </motion.div>
 
-            {/* Subheadline */}
+            {/* Subheadline — the hero hook (option A) */}
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.55, duration: 0.7 }}
               className="mt-8 max-w-xl text-lg leading-relaxed text-white/65"
             >
-              Software Engineer with <span className="text-white">{profile.yearsExperience} years</span> building
-              <span className="text-white"> AI platforms</span>,
-              <span className="text-white"> distributed systems</span>, and
-              <span className="text-white"> HIPAA-compliant infrastructure</span> across
-              <span className="text-white"> AWS</span> and
-              <span className="text-white"> Azure</span> — from proof-of-concept to production.
+              <span className="text-white">{profile.yearsExperience} years</span> building production AI and cloud systems.
+              Currently between chapters — learning AI deeply, automating my workflows with{' '}
+              <span className="text-white">Claude Code</span>.
+              Open to what's next.
             </motion.p>
 
             {/* CTAs */}
@@ -128,11 +128,11 @@ export default function Hero() {
 
               <a href={profile.resumeUrl} download className="btn-ghost group">
                 <Download className="h-4 w-4" />
-                <span>Download Resume</span>
+                <span>Download CV</span>
               </a>
 
               <Link to="/contact" className="group inline-flex items-center gap-2 px-2 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white">
-                <span>Book interview</span>
+                <span>Get in touch</span>
                 <span className="opacity-50 transition-opacity group-hover:opacity-100">↗</span>
               </Link>
             </motion.div>
@@ -145,18 +145,26 @@ export default function Hero() {
               className="mt-12 flex items-center gap-4 text-[11px] uppercase tracking-[0.2em] text-white/30"
             >
               <Sparkles className="h-3 w-3 text-accent-electric" />
-              <span>Trusted with production systems at scale</span>
+              <span>Shipped at scale · learning in public</span>
             </motion.div>
           </div>
 
-          {/* RIGHT — Network graph */}
+          {/* RIGHT — Particle cloud (lazy-loaded) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-            className="relative"
+            className="relative aspect-square w-full max-w-[520px] justify-self-center lg:max-w-none"
           >
-            <NetworkGraph />
+            <Suspense
+              fallback={
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="h-32 w-32 animate-pulse rounded-full bg-gradient-to-br from-accent-electric/20 via-accent-cyan/15 to-accent-violet/20 blur-2xl" />
+                </div>
+              }
+            >
+              <ParticleCloud />
+            </Suspense>
           </motion.div>
         </div>
 

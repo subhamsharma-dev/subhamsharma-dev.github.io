@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import {
-  ArrowRight, Briefcase, Download, FileText, Github, Home, Linkedin, Mail,
+  ArrowRight, Briefcase, Download, Github, Home, Linkedin, Mail, PenSquare, Twitter,
   type LucideIcon,
 } from 'lucide-react'
 import { profile } from '@/data/content'
@@ -21,11 +21,12 @@ type Command = {
 const COMMANDS: Command[] = [
   { id: 'home', label: 'Go to Home', icon: Home, action: (n) => n('/'), keywords: 'index landing' },
   { id: 'projects', label: 'View Projects', icon: Briefcase, action: (n) => n('/projects'), keywords: 'work case studies' },
-  { id: 'resume', label: 'Open Resume', icon: FileText, action: (n) => n('/resume'), keywords: 'cv experience' },
   { id: 'contact', label: 'Get in touch', icon: Mail, action: (n) => n('/contact'), keywords: 'email hire interview' },
-  { id: 'download-cv', label: 'Download Resume PDF', icon: Download, action: () => window.open(profile.resumeUrl, '_blank') },
+  { id: 'download-cv', label: 'Download CV (PDF)', icon: Download, action: () => window.open(profile.resumeUrl, '_blank'), keywords: 'resume' },
   { id: 'linkedin', label: 'Open LinkedIn', icon: Linkedin, action: () => window.open(profile.linkedin, '_blank') },
   { id: 'github', label: 'Open GitHub', icon: Github, action: () => window.open(profile.github, '_blank') },
+  { id: 'twitter', label: 'Open Twitter / X', icon: Twitter, action: () => window.open(profile.twitter, '_blank') },
+  { id: 'medium', label: 'Open Medium', icon: PenSquare, action: () => window.open(profile.medium, '_blank'), keywords: 'blog writing articles' },
   { id: 'email', label: `Email ${profile.email}`, icon: Mail, action: () => (window.location.href = `mailto:${profile.email}`) },
 ]
 

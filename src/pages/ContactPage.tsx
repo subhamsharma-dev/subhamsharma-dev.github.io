@@ -16,11 +16,10 @@ export default function ContactPage() {
           Contact
         </span>
         <h1 className="mt-4 font-display text-5xl font-bold tracking-tightest text-white md:text-6xl">
-          Let's <span className="text-gradient">connect</span>.
+          Say <span className="text-gradient">hi.</span>
         </h1>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-white/55">
-          Open to senior engineering roles in AI infrastructure, cloud systems, and backend platforms.
-          The fastest reply route is email — typically within 24 hours.
+          Open to AI, gen AI, full-stack, backend, cloud, and DevOps roles. Also happy to chat about the work itself — drop a note below or any channel.
         </p>
       </div>
       <Contact />

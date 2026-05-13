@@ -18,13 +18,13 @@ export default function TechStack() {
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <span className="section-eyebrow">
             <span className="h-px w-6 bg-accent-electric/60" />
-            Tech Ecosystem
+            Tech I work with
           </span>
           <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-            The stack behind the systems.
+            Tools I've <span className="text-gradient">shipped with.</span>
           </h2>
           <p className="mt-4 text-sm text-white/55 md:text-base">
-            Hover or tap a category to explore the tools I use in production.
+            Picked up over 4+ years across AI, cloud, and backend work. Hover or tap a category to explore.
           </p>
         </div>
 

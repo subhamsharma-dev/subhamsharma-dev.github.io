@@ -17,11 +17,11 @@ export default function Experience() {
               Experience
             </span>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-              Built for production, by the metric that matters.
+              Where I've <span className="text-gradient">grown.</span>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-white/55">
-            4+ years at White Blink — from intern to SDE-II. Click any role to expand the impact details.
+            4+ years at White Blink — from intern to SDE-II. Click any role to expand the details.
           </p>
         </div>
 

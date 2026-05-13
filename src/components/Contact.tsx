@@ -12,7 +12,7 @@ const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-export default function Contact() {
+export default function Contact({ hideHeader = false }: { hideHeader?: boolean }) {
   const [copied, setCopied] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<Status>('idle')
@@ -72,19 +72,23 @@ export default function Contact() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
           {/* Left — pitch */}
           <div>
-            <span className="section-eyebrow">
-              <span className="h-px w-6 bg-accent-electric/60" />
-              Get in touch
-            </span>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-              Let's <span className="text-gradient">talk.</span>
-            </h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-white/60">
-              Always up for a conversation about interesting problems — AI, infrastructure, distributed systems, or just good engineering. Drop a note below or reach me on any channel.
-            </p>
+            {!hideHeader && (
+              <>
+                <span className="section-eyebrow">
+                  <span className="h-px w-6 bg-accent-electric/60" />
+                  Get in touch
+                </span>
+                <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
+                  Let's <span className="text-gradient">talk.</span>
+                </h2>
+                <p className="mt-5 max-w-md text-base leading-relaxed text-white/60">
+                  Always up for a conversation about interesting problems — AI, infrastructure, distributed systems, or just good engineering. Drop a note below or reach me on any channel.
+                </p>
+              </>
+            )}
 
             {/* Stats row */}
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className={hideHeader ? 'flex flex-wrap gap-3' : 'mt-8 flex flex-wrap gap-3'}>
               <div className="flex items-center gap-2.5 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1.5">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75" />

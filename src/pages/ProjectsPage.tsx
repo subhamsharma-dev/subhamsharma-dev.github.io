@@ -22,7 +22,7 @@ export default function ProjectsPage() {
         </p>
       </div>
 
-      <Projects showAll />
+      <Projects showAll hideHeader />
     </motion.div>
   )
 }

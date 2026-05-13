@@ -21,7 +21,7 @@ export default function ContactPage() {
           Open to AI, gen AI, full-stack, backend, cloud, and DevOps roles. Also happy to chat about the work itself — drop a note below or any channel.
         </p>
       </div>
-      <Contact />
+      <Contact hideHeader />
     </motion.div>
   )
 }

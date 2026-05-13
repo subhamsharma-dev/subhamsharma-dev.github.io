@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Github, Star, X } from 'lucide-react'
 import { projects, type Project } from '@/data/content'
@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 const CATEGORIES = ['All', 'AI', 'Cloud', 'Backend', 'Full Stack', 'Data', 'Healthcare'] as const
 type Category = (typeof CATEGORIES)[number]
 
-export default function Projects({ showAll = false }: { showAll?: boolean }) {
+export default function Projects({ showAll = false, hideHeader = false }: { showAll?: boolean; hideHeader?: boolean }) {
   const [filter, setFilter] = useState<Category>('All')
   const [open, setOpen] = useState<Project | null>(null)
 
@@ -22,22 +22,44 @@ export default function Projects({ showAll = false }: { showAll?: boolean }) {
     <section id="projects" className="relative py-24 md:py-32">
       <div className="container-page">
         {/* Header */}
-        <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <div className="max-w-2xl">
-            <span className="section-eyebrow">
-              <span className="h-px w-6 bg-accent-electric/60" />
-              Projects
-            </span>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-              Things I've <span className="text-gradient">built.</span>
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55 md:text-base">
-              A mix of AI platforms, cloud infrastructure, healthcare automation, and backend systems — each shipped to production. Click any card for the architecture, the trade-offs, and what I learned.
-            </p>
-          </div>
+        {!hideHeader && (
+          <div className="mb-12 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <span className="section-eyebrow">
+                <span className="h-px w-6 bg-accent-electric/60" />
+                Projects
+              </span>
+              <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
+                Things I've <span className="text-gradient">built.</span>
+              </h2>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55 md:text-base">
+                A mix of AI platforms, cloud infrastructure, healthcare automation, and backend systems — each shipped to production. Click any card for the architecture, the trade-offs, and what I learned.
+              </p>
+            </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={cn(
+                    'rounded-full border px-3 py-1.5 text-xs font-medium transition-all',
+                    filter === c
+                      ? 'border-accent-electric/40 bg-accent-electric/10 text-accent-electric'
+                      : 'border-white/10 bg-white/[0.02] text-white/55 hover:border-white/20 hover:text-white'
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* When header is hidden, surface the filters as their own row */}
+        {hideHeader && (
+          <div className="mb-10 flex flex-wrap items-center gap-1.5">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
@@ -53,7 +75,7 @@ export default function Projects({ showAll = false }: { showAll?: boolean }) {
               </button>
             ))}
           </div>
-        </div>
+        )}
 
         {/* Project grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -142,6 +164,39 @@ export default function Projects({ showAll = false }: { showAll?: boolean }) {
 }
 
 function ProjectModal({ project, onClose }: { project: Project | null; onClose: () => void }) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null)
+  const previousFocus = useRef<HTMLElement | null>(null)
+
+  // ESC handler + body scroll lock + focus management
+  useEffect(() => {
+    if (!project) return
+
+    // Remember what was focused before we opened, so we can restore it on close
+    previousFocus.current = document.activeElement as HTMLElement | null
+
+    // Lock body scroll
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    // ESC to close
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+
+    // Move focus to the close button on next tick so it's the first thing screen
+    // readers and keyboard users encounter (and so Tab moves into the modal, not out)
+    const focusTimer = window.setTimeout(() => closeBtnRef.current?.focus(), 50)
+
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.clearTimeout(focusTimer)
+      document.body.style.overflow = originalOverflow
+      // Restore focus to whatever the user was on before opening
+      previousFocus.current?.focus?.()
+    }
+  }, [project, onClose])
+
   return (
     <AnimatePresence>
       {project && (
@@ -153,6 +208,9 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
           className="fixed inset-0 z-[120] flex items-end justify-center bg-black/70 p-0 backdrop-blur-md md:items-center md:p-6"
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
             initial={{ y: 40, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 40, opacity: 0, scale: 0.98 }}
@@ -161,9 +219,10 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             className="glass-strong relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-white/10 md:rounded-3xl"
           >
             <button
+              ref={closeBtnRef}
               onClick={onClose}
-              className="sticky top-4 z-10 ml-auto mr-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-ink-900/90 text-white/60 transition-colors hover:text-white"
-              aria-label="Close"
+              className="sticky top-4 z-10 ml-auto mr-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-ink-900/90 text-white/60 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-accent-electric/60"
+              aria-label="Close project details"
             >
               <X className="h-4 w-4" />
             </button>
@@ -178,7 +237,7 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
                   {project.year}
                 </span>
               </div>
-              <h2 className="mt-4 font-display text-3xl font-bold text-white md:text-4xl">
+              <h2 id="project-modal-title" className="mt-4 font-display text-3xl font-bold text-white md:text-4xl">
                 {project.title}
               </h2>
               <p className="mt-3 text-base text-white/65">{project.tagline}</p>

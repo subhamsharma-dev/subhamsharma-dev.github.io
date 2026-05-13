@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://subhamsharma-dev.github.io/sitemap.xml

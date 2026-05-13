@@ -10,7 +10,6 @@ export const profile = {
   location: 'Bengaluru, India',
   timezone: 'IST (UTC+5:30)',
   email: 'ksubham.sharma@gmail.com',
-  phone: '+91 90511 37398',
   available: true,
   yearsExperience: '4+',
 
@@ -32,10 +31,6 @@ export const profile = {
     'Cloud Engineer',
     'DevOps Engineer',
   ],
-
-  // The hero one-liner (option A — full + reflective)
-  heroHook:
-    "4+ years building production AI and cloud systems. Currently between chapters — learning AI deeply, automating my workflows with Claude Code. Open to what's next.",
 }
 
 // Quick numbers shown under the hero
@@ -55,7 +50,7 @@ export const about = {
   // Edit freely.
   paragraphs: [
     "I'm a software engineer based in Bengaluru with 4+ years building production systems — mostly the unglamorous, load-bearing kind. HIPAA-conformant pipelines, AI document platforms, agentic LLMs, multi-cloud infrastructure on AWS and Azure. The kind of work where uptime matters and the failure mode is someone's data.",
-    "Lately I've been learning AI deeply — building agents, exploring how far Claude Code can take a curious engineer's workflow, and rethinking what \"productivity\" means when an LLM can write the boilerplate. I'm between chapters right now and looking for the next interesting problem — AI infrastructure, gen AI, full-stack, backend, cloud, DevOps. Anything where the bar is high and the work ships.",
+    "Lately I've been learning AI deeply — building agents, exploring how far Claude Code can take a curious engineer's workflow, and rethinking what \"productivity\" means when an LLM can write the boilerplate. Looking for the next interesting problem — AI infrastructure, gen AI, full-stack, backend, cloud, DevOps. Somewhere the work is real and the people are sharp.",
   ],
   // Quick highlights — what shows up next to the narrative
   highlights: [
@@ -87,7 +82,7 @@ export const experiences: Experience[] = [
     period: 'Apr 2025 — Present',
     current: true,
     summary:
-      'Lead engineer on HIPAA-compliant AI pipelines, identity resolution at scale, and vendor compliance platforms.',
+      'Owner of HIPAA-compliant AI pipelines, identity resolution at scale, and the vendor compliance platform — architecture through production.',
     highlights: [
       'Engineered a HIPAA-compliant legal document redaction pipeline (PoC → prod) processing 1M+ scanned case files / 20M+ pages — AWS Textract OCR, Step Functions orchestrating parallel ECS Fargate tasks, Microsoft Presidio for PII/PHI de-identification.',
       'Provisioned AWS infra for an identity resolution pipeline — EMR Serverless (Apache Spark) + Lambda orchestration — processing 10M+ records.',
@@ -252,18 +247,19 @@ export const projects: Project[] = [
     category: ['Cloud', 'Backend', 'Data'],
     year: '2025',
     problem:
-      'Reconciling identities across millions of records from heterogeneous sources for downstream analytics.',
+      "Reconciling identities across millions of records from heterogeneous sources — different schemas, conflicting fields, duplicate entries — into a clean reference dataset for downstream analytics and matching workflows.",
     solution:
-      'EMR Serverless running Spark jobs orchestrated by Lambda — scales elastically without managing clusters.',
+      'EMR Serverless running Spark jobs orchestrated by Lambda. Elastic scale without managing a cluster, batched partition processing, and a deterministic match layer that survives real-world data drift.',
     challenge:
-      'Tuning Spark partitions and Lambda orchestration to balance cost vs. SLA for batch resolution.',
+      "Tuning Spark partition sizing and Lambda orchestration to balance cost vs. SLA on each batch. Validating match quality at scale meant iterating on thresholds against representative edge cases, not just synthetic data.",
     impact:
-      'A reliable, scalable record-matching foundation that became core data infrastructure.',
-    scale: '10M+ records processed',
+      "Became foundational data infrastructure — fed analytics, reporting, and downstream business logic that depended on a single source of truth.",
+    scale: '10M+ records processed · serverless Spark · cost-tuned batches',
     stack: ['AWS EMR Serverless', 'Apache Spark', 'AWS Lambda', 'Python', 'Terraform'],
     metrics: [
       { label: 'Records', value: '10M+' },
       { label: 'Spark on', value: 'Serverless' },
+      { label: 'Cluster mgmt', value: 'Zero' },
     ],
   },
   {
@@ -312,23 +308,45 @@ export const projects: Project[] = [
   {
     slug: 'remote-patient-monitoring',
     title: 'Remote Patient Monitoring',
-    tagline: 'HIPAA-conformant telehealth platform + on-prem ETL feeding clinical dashboards',
+    tagline: 'Self-hosted HIPAA-conformant telehealth platform on AWS EC2',
     category: ['Cloud', 'Backend', 'Healthcare'],
-    year: '2023-2024',
+    year: '2022-2024',
     problem:
-      'Healthcare clients needed secure remote consultations and unified visibility into patient onboarding, transaction volume, and revenue — without sending PHI through third-party SaaS.',
+      'Healthcare clients needed secure remote consultations without sending PHI through third-party SaaS — and without taking on the operational complexity of a managed telehealth vendor.',
     solution:
-      "Two complementary pieces: (1) a self-hosted HIPAA-conformant telehealth platform on AWS EC2 using Jitsi + Jibri with encrypted S3 session recordings; (2) a nightly ETL pipeline syncing on-prem MSSQL → AWS RDS, surfaced as Google Data Studio dashboards.",
+      "Built a self-hosted HIPAA-conformant telehealth platform on AWS EC2 using Jitsi (video) + Jibri (server-side recording), with encrypted S3 storage for session recordings and full ownership of TLS, access control, and retention policy.",
     challenge:
-      "Self-hosting telehealth meant owning the full security surface — TLS, encryption, recording storage, access control. The ETL side needed reliable cross-network sync without exposing the on-prem database.",
+      "Self-hosting telehealth means owning the entire security surface — TLS termination, recording encryption, S3 access policies, room authorization, retention. None of the convenience of a managed vendor; all of the responsibility.",
     impact:
-      'Clinical teams got a secure consultation tool with zero PHI leaving their cloud, plus daily dashboards covering patient onboarding, volume, and revenue growth.',
-    scale: '50+ concurrent consultations · ~5K rows/day ETL · encrypted recording archive',
-    stack: ['AWS EC2', 'Jitsi', 'Jibri', 'S3', 'Microsoft SQL Server', 'AWS RDS', 'Google Data Studio', 'Windows middleware'],
+      "Clinical teams got a secure consultation tool with zero PHI leaving their cloud boundary. The platform handled the load and held up under audit.",
+    scale: '50+ concurrent consultations · encrypted recording archive · HIPAA-conformant',
+    stack: ['AWS EC2', 'Jitsi', 'Jibri', 'S3', 'TLS', 'Linux', 'Ansible'],
     metrics: [
       { label: 'Concurrent calls', value: '50+' },
-      { label: 'Daily ETL rows', value: '~5K' },
       { label: 'PHI leaks', value: '0' },
+      { label: 'Compliance', value: 'HIPAA' },
+    ],
+  },
+  {
+    slug: 'pharmacy-analytics-etl',
+    title: 'Pharmacy Analytics ETL Pipeline',
+    tagline: 'Nightly cross-network sync from on-prem MSSQL → AWS RDS → client dashboards',
+    category: ['Cloud', 'Backend', 'Data'],
+    year: '2025-Present',
+    problem:
+      "A pharmacy-chain client needed daily visibility into patient onboarding, transaction volume, and revenue growth — but the source data lived in an on-prem Microsoft SQL Server behind their firewall, with no path to surface it cleanly to leadership.",
+    solution:
+      "Built a nightly ETL pipeline syncing ~5K rows/day from on-prem MSSQL to an AWS RDS analytics database via scheduled Windows middleware jobs. Connected to Google Data Studio for client-facing dashboards tracking onboarding, transactions, and monthly revenue.",
+    challenge:
+      "Cross-network sync from a firewalled on-prem database into AWS — without exposing the source DB or punching arbitrary firewall holes. Scheduled jobs that fail closed and surface their status loudly enough that issues get caught the next morning, not the next quarter.",
+    impact:
+      "Client leadership now opens a dashboard each morning with the prior day's numbers, instead of waiting on a manual export. Onboarding bottlenecks and revenue trends surface in days, not weeks.",
+    scale: '~5K rows/day · nightly schedule · client-facing dashboards',
+    stack: ['Microsoft SQL Server', 'AWS RDS', 'Windows middleware', 'Google Data Studio', 'Scheduled jobs'],
+    metrics: [
+      { label: 'Rows / day', value: '~5K' },
+      { label: 'Cadence', value: 'Nightly' },
+      { label: 'Audience', value: 'Client-facing' },
     ],
   },
   {

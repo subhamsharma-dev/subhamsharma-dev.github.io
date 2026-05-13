@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Building2, ChevronDown, MapPin, Zap } from 'lucide-react'
-import { experiences } from '@/data/content'
+import { Building2, ChevronDown, GraduationCap, MapPin, Zap } from 'lucide-react'
+import { education, experiences } from '@/data/content'
 import { cn } from '@/lib/cn'
 
 export default function Experience() {
@@ -17,7 +17,7 @@ export default function Experience() {
               Experience
             </span>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
-              Where I've <span className="text-gradient">grown.</span>
+              The <span className="text-gradient">work so far.</span>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-white/55">
@@ -137,6 +137,36 @@ export default function Experience() {
               )
             })}
           </div>
+
+          {/* Education — compact card at the bottom of the timeline */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative mt-6 pl-12 md:pl-16"
+          >
+            <div className="absolute left-0 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-ink-900 md:left-[2px]">
+              <GraduationCap className="h-4 w-4 text-white/60" strokeWidth={1.6} />
+            </div>
+
+            <div className="card-surface p-6">
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+                    {education.degree}
+                  </h3>
+                  <p className="mt-1 text-sm text-white/55">
+                    {education.institution} · {education.university}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-[12px] font-mono text-white/50 md:flex-col md:items-end md:gap-1">
+                  <span>{education.period}</span>
+                  <span className="text-accent-electric/80">CGPA {education.cgpa}</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

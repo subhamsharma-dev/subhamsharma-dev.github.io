@@ -97,7 +97,7 @@ export default function Contact({ hideHeader = false }: { hideHeader?: boolean }
                 <span className="text-[12px] font-medium text-emerald-300">Open to roles</span>
               </div>
               <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-white/70">
-                <Clock className="h-3 w-3" /> Replies in &lt;24h
+                <Clock className="h-3 w-3" /> Usually replies within a day
               </div>
               <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-white/70">
                 <MapPin className="h-3 w-3" /> {profile.timezone}

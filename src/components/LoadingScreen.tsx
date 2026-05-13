@@ -45,7 +45,7 @@ export default function LoadingScreen() {
           <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/40">
             Subham Sharma
           </div>
-          <div className="mt-1 text-[10px] text-white/30">Initializing systems…</div>
+          <div className="mt-1 text-[10px] text-white/30">Spinning up…</div>
         </motion.div>
       </div>
     </motion.div>

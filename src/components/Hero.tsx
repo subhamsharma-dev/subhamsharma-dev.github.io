@@ -1,7 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Download, MapPin, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { profile, heroStats } from '@/data/content'
 
 // Lazy-load three.js so it doesn't block the initial render
@@ -42,7 +41,7 @@ export default function Hero() {
   }, [displayedRole, phase, roleIndex])
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
+    <section id="home" className="relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24">
       {/* Atmospheric backgrounds */}
       <div className="grid-bg absolute inset-0 -z-10 opacity-50" aria-hidden="true" />
       <div className="absolute inset-x-0 top-0 -z-10 h-[600px] bg-aurora" aria-hidden="true" />
@@ -121,20 +120,26 @@ export default function Hero() {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="mt-10 flex flex-wrap items-center gap-3"
             >
-              <Link to="/projects" className="btn-primary group">
+              <button
+                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                className="btn-primary group"
+              >
                 <span>View Projects</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
+              </button>
 
               <a href={profile.resumeUrl} download className="btn-ghost group">
                 <Download className="h-4 w-4" />
                 <span>Download CV</span>
               </a>
 
-              <Link to="/contact" className="group inline-flex items-center gap-2 px-2 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white">
+              <button
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group inline-flex items-center gap-2 px-2 py-2 text-sm font-medium text-white/65 transition-colors hover:text-white"
+              >
                 <span>Get in touch</span>
-                <span className="opacity-50 transition-opacity group-hover:opacity-100">↗</span>
-              </Link>
+                <span className="opacity-50 transition-opacity group-hover:opacity-100">↓</span>
+              </button>
             </motion.div>
 
             {/* Tech ticker */}

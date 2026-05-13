@@ -1,5 +1,4 @@
 import { Github, Linkedin, Mail, PenSquare, Twitter } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { profile } from '@/data/content'
 
 export default function Footer() {
@@ -31,9 +30,9 @@ export default function Footer() {
           <div>
             <div className="text-[11px] uppercase tracking-[0.18em] text-white/40">Sitemap</div>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><Link to="/" className="text-white/65 transition-colors hover:text-white">Home</Link></li>
-              <li><Link to="/projects" className="text-white/65 transition-colors hover:text-white">Projects</Link></li>
-              <li><Link to="/contact" className="text-white/65 transition-colors hover:text-white">Contact</Link></li>
+              <li><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/65 transition-colors hover:text-white">Home</button></li>
+              <li><button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/65 transition-colors hover:text-white">Projects</button></li>
+              <li><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/65 transition-colors hover:text-white">Contact</button></li>
               <li><a href={profile.resumeUrl} download className="text-white/65 transition-colors hover:text-white">Download CV</a></li>
             </ul>
           </div>

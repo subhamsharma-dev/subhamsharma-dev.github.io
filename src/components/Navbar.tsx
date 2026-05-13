@@ -1,22 +1,27 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Command, Download, Github, Linkedin, Mail, Check } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { profile } from '@/data/content'
 
-const NAV_ITEMS = [
-  { label: 'Home', to: '/' },
-  { label: 'Projects', to: '/projects' },
-  { label: 'Contact', to: '/contact' },
+type SectionId = 'home' | 'about' | 'projects' | 'experience' | 'stack' | 'achievements' | 'contact'
+
+const NAV_ITEMS: { label: string; sectionId: SectionId }[] = [
+  { label: 'Home', sectionId: 'home' },
+  { label: 'Projects', sectionId: 'projects' },
+  { label: 'Contact', sectionId: 'contact' },
 ]
 
 export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [emailCopied, setEmailCopied] = useState(false)
+  const [activeSection, setActiveSection] = useState<SectionId>('home')
 
+  // Sticky-bar visual state
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
@@ -24,21 +29,84 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Close mobile menu on route change
   useEffect(() => { setMobileOpen(false) }, [pathname])
 
-  // mailto: links often do nothing when the user has no default mail client.
-  // Instead, copy the email to clipboard AND attempt to open mailto — best of both.
+  // Active section tracking via IntersectionObserver — only on home
+  useEffect(() => {
+    if (pathname !== '/') return
+
+    // Wait for sections to render
+    const setupObserver = () => {
+      const sections = document.querySelectorAll<HTMLElement>('section[id]')
+      if (!sections.length) return null
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          // Find the section that intersects most
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+          if (visible[0]) setActiveSection(visible[0].target.id as SectionId)
+        },
+        { rootMargin: '-40% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+      )
+      sections.forEach((s) => observer.observe(s))
+
+      // Top-of-page reset
+      const onScrollTop = () => {
+        if (window.scrollY < 80) setActiveSection('home')
+      }
+      window.addEventListener('scroll', onScrollTop, { passive: true })
+
+      return () => {
+        observer.disconnect()
+        window.removeEventListener('scroll', onScrollTop)
+      }
+    }
+
+    // Allow sections to mount before observing
+    const t = setTimeout(setupObserver, 200)
+    return () => clearTimeout(t)
+  }, [pathname])
+
+  const scrollToSection = (id: SectionId) => {
+    if (id === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    if (pathname !== '/') {
+      // Off home — navigate then scroll once mounted
+      navigate('/')
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+        })
+      })
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleNavClick = (e: React.MouseEvent, id: SectionId) => {
+    e.preventDefault()
+    scrollToSection(id)
+  }
+
+  // mailto often does nothing if no default mail client is set up,
+  // so we copy the email and try mailto in parallel.
   const handleEmailClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     try {
       await navigator.clipboard.writeText(profile.email)
       setEmailCopied(true)
       setTimeout(() => setEmailCopied(false), 2200)
-    } catch {
-      // clipboard blocked, fall through to mailto:
-    }
+    } catch {/* clipboard blocked */}
     window.location.href = `mailto:${profile.email}`
   }
+
+  // Determine active nav item — only highlight when on home and that section is in view
+  const activeNavId: SectionId = pathname === '/' ? activeSection : 'home'
 
   return (
     <>
@@ -74,11 +142,11 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
           {/* Center nav */}
           <ul className="hidden items-center gap-1 md:flex">
             {NAV_ITEMS.map((item) => {
-              const active = pathname === item.to
+              const active = activeNavId === item.sectionId
               return (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
+                <li key={item.sectionId}>
+                  <button
+                    onClick={(e) => handleNavClick(e, item.sectionId)}
                     className={cn(
                       'relative rounded-full px-3.5 py-1.5 text-sm transition-colors',
                       active ? 'text-white' : 'text-white/60 hover:text-white'
@@ -92,7 +160,7 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
                       />
                     )}
                     <span className="relative">{item.label}</span>
-                  </Link>
+                  </button>
                 </li>
               )
             })}
@@ -100,7 +168,6 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
 
           {/* Right side */}
           <div className="flex items-center gap-1.5">
-            {/* CV button */}
             <a
               href={profile.resumeUrl}
               download
@@ -139,7 +206,7 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
               </a>
             </div>
 
-            {/* Mobile menu button */}
+            {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white"
@@ -165,17 +232,17 @@ export default function Navbar({ onOpenPalette }: { onOpenPalette: () => void })
             <div className="glass-strong rounded-2xl border border-white/10 p-3">
               <ul className="flex flex-col">
                 {NAV_ITEMS.map((item) => (
-                  <li key={item.to}>
-                    <Link
-                      to={item.to}
+                  <li key={item.sectionId}>
+                    <button
+                      onClick={(e) => handleNavClick(e, item.sectionId)}
                       className={cn(
-                        'flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors',
-                        pathname === item.to ? 'bg-white/[0.06] text-white' : 'text-white/70 hover:bg-white/[0.04] hover:text-white'
+                        'flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors',
+                        activeNavId === item.sectionId ? 'bg-white/[0.06] text-white' : 'text-white/70 hover:bg-white/[0.04] hover:text-white'
                       )}
                     >
                       <span>{item.label}</span>
                       <span className="text-white/30">→</span>
-                    </Link>
+                    </button>
                   </li>
                 ))}
                 <li>

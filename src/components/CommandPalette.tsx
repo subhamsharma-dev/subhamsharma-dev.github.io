@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import {
-  ArrowRight, Briefcase, Download, Github, Home, Linkedin, Mail, PenSquare, Twitter,
+  ArrowRight, Boxes, Briefcase, BriefcaseBusiness, Download, Github, Home, Linkedin, Mail, PenSquare, Twitter, User,
   type LucideIcon,
 } from 'lucide-react'
 import { profile } from '@/data/content'
@@ -18,10 +18,30 @@ type Command = {
   keywords?: string
 }
 
+// Helper: navigate to home then scroll to a section, or just scroll if already home
+function gotoSection(nav: ReturnType<typeof useNavigate>, sectionId: string) {
+  // If on a different route, go home first
+  if (window.location.hash !== '#/' && window.location.hash !== '') {
+    nav('/')
+  }
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (sectionId === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+      }
+    })
+  })
+}
+
 const COMMANDS: Command[] = [
-  { id: 'home', label: 'Go to Home', icon: Home, action: (n) => n('/'), keywords: 'index landing' },
-  { id: 'projects', label: 'View Projects', icon: Briefcase, action: (n) => n('/projects'), keywords: 'work case studies' },
-  { id: 'contact', label: 'Get in touch', icon: Mail, action: (n) => n('/contact'), keywords: 'email hire interview' },
+  { id: 'home', label: 'Go to Home', icon: Home, action: (n) => gotoSection(n, 'home'), keywords: 'top landing' },
+  { id: 'projects', label: 'Jump to Projects', icon: Briefcase, action: (n) => gotoSection(n, 'projects'), keywords: 'work case studies' },
+  { id: 'contact', label: 'Jump to Contact', icon: Mail, action: (n) => gotoSection(n, 'contact'), keywords: 'email reach' },
+  { id: 'about', label: 'Jump to About', icon: User, action: (n) => gotoSection(n, 'about'), keywords: 'bio story' },
+  { id: 'experience', label: 'Jump to Experience', icon: BriefcaseBusiness, action: (n) => gotoSection(n, 'experience'), keywords: 'work history roles' },
+  { id: 'stack', label: 'Jump to Tech Stack', icon: Boxes, action: (n) => gotoSection(n, 'stack'), keywords: 'tools tech' },
   { id: 'download-cv', label: 'Download CV (PDF)', icon: Download, action: () => window.open(profile.resumeUrl, '_blank'), keywords: 'resume' },
   { id: 'linkedin', label: 'Open LinkedIn', icon: Linkedin, action: () => window.open(profile.linkedin, '_blank') },
   { id: 'github', label: 'Open GitHub', icon: Github, action: () => window.open(profile.github, '_blank') },

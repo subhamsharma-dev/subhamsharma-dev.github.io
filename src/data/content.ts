@@ -194,28 +194,29 @@ export const projects: Project[] = [
   {
     slug: 'legal-ai-platform',
     title: 'AI Legal Intelligence Platform',
-    tagline: 'Two-phase system: HIPAA de-identification → RAG over the cleaned corpus',
+    tagline: 'HIPAA-conformant redaction → two-tier knowledge base with hybrid retrieval',
     category: ['AI', 'Cloud', 'Backend', 'Data'],
     year: '2025',
     featured: true,
     problem:
-      "Law firms wanted AI-assisted analysis of case outcomes and legal strategy, but couldn't feed raw documents into any LLM without first removing PII and PHI at scale — manually impossible, regulatorily required.",
+      "Law firms wanted AI-assisted analysis of case outcomes and legal strategy, but couldn't feed raw documents into any LLM without first removing PII and PHI at scale. And once cleaned, the corpus was still too large for naïve vector search to be useful — legal queries mix keyword precision (statute names, case numbers) with semantic intent.",
     solution:
-      "Built end-to-end in two phases. Phase 1: a HIPAA-compliant redaction pipeline (Textract OCR → Step Functions → ECS Fargate workers running Microsoft Presidio) that de-identifies 1M+ files / 20M+ pages. Phase 2: a semantic knowledge base over the cleaned corpus using LangChain + Pinecone + OpenAI Embeddings — recursive text splitting, cosine similarity retrieval, natural-language Q&A over the entire body of work.",
+      "Built end-to-end in two stages. Stage 1: a HIPAA-compliant redaction pipeline (AWS Textract OCR → Step Functions → parallel ECS Fargate workers running Microsoft Presidio) de-identifying 1M+ files / 20M+ pages. Stage 2: a two-tier knowledge base over the cleaned corpus. Lambdas + Bedrock extract structured metadata (case type, outcome, jurisdiction) into Postgres so we pre-filter before any vector search. An ECS batch job hierarchically chunks documents — paragraph-level for embedding precision, parent sections returned to the LLM for context. Embeddings go through Bedrock Titan to keep everything inside the AWS compliance boundary. OpenSearch handles hybrid retrieval (BM25 + semantic). A FastAPI service ties it all together: metadata filter → hybrid search → parent fetch → re-rank → LLM answer.",
     challenge:
-      "Designing the redaction pipeline to handle thousands of parallel OCR + de-identification tasks across wildly different document layouts while preserving downstream analytical value. Then tuning the RAG chunking + retrieval to surface the right passage out of hundreds of thousands of candidates.",
+      "HIPAA conformance ruled out third-party embedding services, so the whole AI stack had to live inside AWS. Naïve vector search doesn't scale to 20M+ pages — the metadata pre-filter is what makes retrieval tractable. Hybrid BM25+semantic matters because legal queries are neither purely keyword nor purely semantic. Hierarchical chunking gives the embedder focused passages while the LLM still gets enough surrounding context to reason about case outcomes.",
     impact:
-      "Unlocked AI-driven analysis on a corpus that was previously off-limits. Lawyers query the cleaned corpus in natural language and get cited passages in seconds.",
-    scale: '1M+ scanned files · 20M+ pages · 10+ legal reference books indexed · HIPAA end-to-end',
+      "Lawyers query case outcomes in natural language — \"show me cases like X with outcome Y in jurisdiction Z\" — and get cited passages in seconds. Everything stays within the AWS compliance boundary; nothing leaves.",
+    scale: '1M+ files · 20M+ pages · hybrid (BM25 + vector) retrieval · HIPAA end-to-end',
     stack: [
       'AWS Textract', 'AWS Step Functions', 'ECS Fargate', 'Microsoft Presidio',
-      'LangChain', 'Pinecone', 'OpenAI Embeddings', 'Python', 'FastAPI', 'Terraform',
+      'AWS Lambda', 'Amazon Bedrock (Titan)', 'Amazon OpenSearch', 'PostgreSQL',
+      'FastAPI', 'Python', 'Terraform',
     ],
     metrics: [
       { label: 'Pages de-identified', value: '20M+' },
       { label: 'Files', value: '1M+' },
-      { label: 'Retrieval', value: 'Cosine sim' },
-      { label: 'Compliance', value: 'HIPAA' },
+      { label: 'Retrieval', value: 'Hybrid' },
+      { label: 'Compliance', value: 'HIPAA · AWS-only' },
     ],
   },
   {
@@ -264,19 +265,40 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'claimant-medical-data',
-    title: 'Claimant Medical Data Solutions',
-    tagline: 'Lambda-based EHR document automation across Epic, Cerner, and external services',
+    slug: 'legal-reference-rag',
+    title: 'Legal Reference Knowledge Base',
+    tagline: 'Earlier RAG over 10+ legal reference books — LangChain + Pinecone',
+    category: ['AI', 'Backend'],
+    year: '2023',
+    problem:
+      'Lawyers spent hours searching across reference books for specific precedents — keyword search across PDFs didn\'t cut it.',
+    solution:
+      'Indexed 10+ legal reference books with LangChain — recursive text splitting into thousands of retrievable chunks, embedded via OpenAI, stored in Pinecone, retrieved by cosine similarity for natural-language Q&A.',
+    challenge:
+      'Tuning chunk size and retrieval thresholds so the right passage surfaced out of thousands of candidates — without over-fetching unrelated context.',
+    impact:
+      "An earlier proof-of-concept that proved the value before the team committed to a HIPAA-conformant, in-house architecture for the bigger case-file corpus (see AI Legal Intelligence Platform).",
+    scale: '10+ reference books · thousands of retrievable chunks',
+    stack: ['LangChain', 'Pinecone', 'OpenAI Embeddings', 'Python', 'FastAPI'],
+    metrics: [
+      { label: 'Books indexed', value: '10+' },
+      { label: 'Retrieval', value: 'Cosine sim' },
+    ],
+  },
+  {
+    slug: 'ehr-records-platform',
+    title: 'EHR Records Aggregation Platform',
+    tagline: 'Lambda-based system aggregating electronic health records from Epic, Cerner, and external services',
     category: ['Cloud', 'Backend', 'Healthcare'],
     year: '2021-2024',
     problem:
-      "Aggregating medical records from US EHR systems (Epic, Cerner) and external services into standardized claimant documents was manual and inconsistent.",
+      "A healthcare-data client needed to aggregate electronic health records from major EHR systems (Epic, Cerner) and route them into standardized claimant documents — at volumes manual workflows couldn't handle.",
     solution:
       'Owned the AWS infrastructure end to end. Built 20+ Java Lambda functions (with Thymeleaf templates, provisioned via CDK) rendering aggregated EHR data into standardized PDFs, plus 10+ event-driven Python Lambda apps integrating Salesforce, Twilio, SendGrid, and SignalWire.',
     challenge:
       'Guaranteeing at-least-once processing at scale — idempotent handlers, dead-letter queues, exponential backoff — across thousands of invocations per day, with WAF + Cognito protecting the API layer.',
     impact:
-      "Codified 100% of resources in CloudFormation + CDK across 5+ AWS accounts. Manual provisioning errors went to zero.",
+      "Codified 100% of resources in CloudFormation + CDK across 5+ AWS accounts. Manual provisioning errors went to zero. The client's records-retrieval product runs on this pipeline.",
     scale: 'Thousands of invocations/day · 5+ AWS accounts · 100% IaC coverage',
     stack: ['AWS Lambda (Java + Python)', 'API Gateway', 'SQS', 'Cognito', 'WAF', 'CloudFormation', 'CDK', 'Salesforce', 'Twilio', 'SendGrid'],
     metrics: [

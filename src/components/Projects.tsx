@@ -26,13 +26,13 @@ export default function Projects({ showAll = false }: { showAll?: boolean }) {
           <div className="max-w-2xl">
             <span className="section-eyebrow">
               <span className="h-px w-6 bg-accent-electric/60" />
-              Selected Work
+              Projects
             </span>
             <h2 className="mt-4 font-display text-4xl font-bold tracking-tightest text-white md:text-5xl">
               Things I've <span className="text-gradient">built.</span>
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55 md:text-base">
-              A mix of AI platforms, cloud infrastructure, and backend systems — each shipped to production at meaningful scale. Click any card for the architecture, the trade-offs, and what I learned.
+              A mix of AI platforms, cloud infrastructure, healthcare automation, and backend systems — each shipped to production. Click any card for the architecture, the trade-offs, and what I learned.
             </p>
           </div>
 

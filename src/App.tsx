@@ -51,17 +51,15 @@ export default function App() {
 
       <main className="relative z-10">
         {/*
-          AnimatePresence: mode="wait" was causing flashes of blank content on some
-          navigations. Using the default sync mode lets the new page mount immediately
-          (under the exiting one) so users always see content during the transition.
+          No AnimatePresence wrapper around Routes — that pattern is finicky in
+          React Router 6 and can leave the entering page stuck at opacity: 0.
+          Each page handles its own mount animation in its motion.div instead.
         */}
-        <AnimatePresence mode="sync" initial={false}>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Routes>
-        </AnimatePresence>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
       </main>
 
       <Footer />

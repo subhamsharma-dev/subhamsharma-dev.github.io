@@ -1,10 +1,8 @@
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Download, MapPin, Sparkles } from 'lucide-react'
 import { profile, heroStats } from '@/data/content'
-
-// Lazy-load three.js so it doesn't block the initial render
-const ParticleCloud = lazy(() => import('./ParticleCloud'))
+import IDEWindow from './IDEWindow'
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
@@ -154,22 +152,14 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT — Particle cloud (lazy-loaded) */}
+          {/* RIGHT — IDE-framed portrait */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-            className="relative aspect-square w-full max-w-[520px] justify-self-center lg:max-w-none"
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.35, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-[560px] justify-self-center lg:max-w-none"
           >
-            <Suspense
-              fallback={
-                <div className="flex h-full w-full items-center justify-center">
-                  <div className="h-32 w-32 animate-pulse rounded-full bg-gradient-to-br from-accent-electric/20 via-accent-cyan/15 to-accent-violet/20 blur-2xl" />
-                </div>
-              }
-            >
-              <ParticleCloud />
-            </Suspense>
+            <IDEWindow />
           </motion.div>
         </div>
 

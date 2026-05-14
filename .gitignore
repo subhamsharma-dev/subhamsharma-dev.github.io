@@ -17,6 +17,7 @@ build/
 Thumbs.db
 *.swp
 *.swo
+.claude/
 
 # Env
 .env

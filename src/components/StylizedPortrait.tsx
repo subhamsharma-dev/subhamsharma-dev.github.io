@@ -46,8 +46,7 @@ export default function StylizedPortrait() {
           }}
         />
 
-        {/* The subject — photo (image is already palette-aligned, so we
-            barely touch it; just a light tint + vignette + shimmer). */}
+        {/* The subject — photo with Subtle Premium filter stack */}
         {loaded && (
           <motion.div
             initial={{ opacity: 0, scale: 1.03 }}
@@ -62,7 +61,8 @@ export default function StylizedPortrait() {
               className="absolute inset-0 h-full w-full select-none object-cover object-[50%_30%]"
               style={{ filter: 'contrast(1.04) saturate(0.95)' }}
             />
-            {/* Light cool tint in shadows, soft warm-cool grade */}
+
+            {/* Light cool/warm tint */}
             <div
               aria-hidden="true"
               className="absolute inset-0"
@@ -72,20 +72,64 @@ export default function StylizedPortrait() {
                 mixBlendMode: 'overlay',
               }}
             />
-            {/* Subtle highlight bloom on the face area */}
+
+            {/* Soft highlight bloom on face area */}
             <div
               aria-hidden="true"
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(ellipse 45% 35% at 50% 32%, rgba(255,255,255,0.10), transparent 70%)',
+                  'radial-gradient(ellipse 48% 38% at 50% 32%, rgba(255,255,255,0.14), transparent 70%)',
                 mixBlendMode: 'screen',
               }}
             />
+
+            {/* Pulsing cyan rim (left edge) */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(90deg, rgba(92,200,255,0.32) 0%, transparent 22%)',
+                mixBlendMode: 'screen',
+              }}
+              animate={{ opacity: [0.55, 0.95, 0.55] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+
+            {/* Pulsing violet rim (right edge) */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(270deg, rgba(139,124,246,0.28) 0%, transparent 24%)',
+                mixBlendMode: 'screen',
+              }}
+              animate={{ opacity: [0.6, 0.95, 0.6] }}
+              transition={{
+                duration: 4.2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.7,
+              }}
+            />
+
+            {/* Subtle chromatic aberration hint — colored fringe at extreme edges */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse 70% 72% at 50% 50%, transparent 60%, rgba(92,200,255,0.10) 88%, rgba(139,124,246,0.10) 100%)',
+                mixBlendMode: 'screen',
+              }}
+            />
+
             {/* Holographic shimmer slowly sliding across */}
             <motion.div
               aria-hidden="true"
-              className="absolute inset-0"
+              className="pointer-events-none absolute inset-0"
               style={{
                 background:
                   'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.08) 47%, rgba(92,200,255,0.16) 50%, rgba(139,124,246,0.12) 53%, transparent 65%)',
@@ -99,11 +143,36 @@ export default function StylizedPortrait() {
                 repeatDelay: 5,
               }}
             />
-            {/* Inner vignette to deepen edges and blend into the frame */}
+
+            {/* Film grain — subtle, on top of the photo, below HUD */}
             <div
               aria-hidden="true"
-              className="absolute inset-0"
-              style={{ boxShadow: 'inset 0 0 80px 18px rgba(5,6,8,0.55)' }}
+              className="pointer-events-none absolute inset-0 opacity-[0.22]"
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.85'/></svg>\")",
+                backgroundSize: '180px 180px',
+                mixBlendMode: 'overlay',
+              }}
+            />
+
+            {/* Gemini sparkle watermark mask — bottom-right of photo */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 right-0"
+              style={{
+                width: '14%',
+                height: '12%',
+                background:
+                  'radial-gradient(circle at 72% 72%, rgba(5,6,8,0.96) 0%, rgba(5,6,8,0.55) 55%, transparent 100%)',
+              }}
+            />
+
+            {/* Stronger inner vignette */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{ boxShadow: 'inset 0 0 100px 24px rgba(5,6,8,0.72)' }}
             />
           </motion.div>
         )}

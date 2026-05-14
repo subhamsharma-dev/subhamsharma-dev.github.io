@@ -46,47 +46,40 @@ export default function StylizedPortrait() {
           }}
         />
 
-        {/* The subject — photo + duotone */}
+        {/* The subject — photo (image is already palette-aligned, so we
+            barely touch it; just a light tint + vignette + shimmer). */}
         {loaded && (
           <motion.div
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             className="absolute inset-0"
-            style={{
-              maskImage:
-                'radial-gradient(ellipse 64% 74% at 50% 40%, black 40%, rgba(0,0,0,0.55) 68%, transparent 96%)',
-              WebkitMaskImage:
-                'radial-gradient(ellipse 64% 74% at 50% 40%, black 40%, rgba(0,0,0,0.55) 68%, transparent 96%)',
-            }}
           >
-            {/* Base photo, slightly desaturated + punchier contrast */}
             <img
               src={SRC}
               alt="Subham Sharma"
               draggable={false}
-              className="absolute inset-0 h-full w-full select-none object-cover object-[50%_28%]"
-              style={{ filter: 'contrast(1.1) saturate(0.55) brightness(0.95)' }}
+              className="absolute inset-0 h-full w-full select-none object-cover object-[50%_30%]"
+              style={{ filter: 'contrast(1.04) saturate(0.95)' }}
             />
-            {/* Color grade — pushes the whole hue toward the site palette */}
+            {/* Light cool tint in shadows, soft warm-cool grade */}
             <div
               aria-hidden="true"
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(140deg, #5cc8ff 0%, #22d3ee 45%, #8b7cf6 100%)',
-                mixBlendMode: 'color',
-                opacity: 0.78,
+                  'linear-gradient(140deg, rgba(92,200,255,0.18) 0%, transparent 45%, rgba(139,124,246,0.22) 100%)',
+                mixBlendMode: 'overlay',
               }}
             />
-            {/* Highlight bloom on face area */}
+            {/* Subtle highlight bloom on the face area */}
             <div
               aria-hidden="true"
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(ellipse 50% 40% at 50% 32%, rgba(255,255,255,0.18), transparent 70%)',
-                mixBlendMode: 'overlay',
+                  'radial-gradient(ellipse 45% 35% at 50% 32%, rgba(255,255,255,0.10), transparent 70%)',
+                mixBlendMode: 'screen',
               }}
             />
             {/* Holographic shimmer slowly sliding across */}
@@ -95,22 +88,22 @@ export default function StylizedPortrait() {
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.10) 45%, rgba(92,200,255,0.22) 50%, rgba(139,124,246,0.16) 55%, transparent 70%)',
+                  'linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.08) 47%, rgba(92,200,255,0.16) 50%, rgba(139,124,246,0.12) 53%, transparent 65%)',
                 mixBlendMode: 'overlay',
               }}
               animate={{ x: ['-110%', '110%'] }}
               transition={{
-                duration: 11,
+                duration: 12,
                 repeat: Infinity,
                 ease: 'easeInOut',
-                repeatDelay: 4,
+                repeatDelay: 5,
               }}
             />
-            {/* Inner vignette to deepen edges */}
+            {/* Inner vignette to deepen edges and blend into the frame */}
             <div
               aria-hidden="true"
               className="absolute inset-0"
-              style={{ boxShadow: 'inset 0 0 90px 28px rgba(5,6,8,0.55)' }}
+              style={{ boxShadow: 'inset 0 0 80px 18px rgba(5,6,8,0.55)' }}
             />
           </motion.div>
         )}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Download, MapPin, Sparkles } from 'lucide-react'
 import { profile, heroStats } from '@/data/content'
-import DotMatrixPortrait from './DotMatrixPortrait'
+import StylizedPortrait from './StylizedPortrait'
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
@@ -151,14 +151,14 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT — dot-matrix portrait */}
+          {/* RIGHT — stylized portrait */}
           <motion.div
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.35, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-[520px] justify-self-center lg:max-w-none"
           >
-            <DotMatrixPortrait />
+            <StylizedPortrait />
           </motion.div>
         </div>
 

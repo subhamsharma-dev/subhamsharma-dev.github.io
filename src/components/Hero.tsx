@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Download, MapPin, Sparkles } from 'lucide-react'
 import { profile, heroStats } from '@/data/content'
-import IDEWindow from './IDEWindow'
+import WireframePortrait from './WireframePortrait'
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
@@ -106,8 +106,7 @@ export default function Hero() {
               className="mt-8 max-w-xl text-lg leading-relaxed text-white/65"
             >
               <span className="text-white">{profile.yearsExperience} years</span> building production AI and cloud systems.
-              Currently between chapters — learning AI deeply, automating my workflows with{' '}
-              <span className="text-white">Claude Code</span>.
+              Currently between chapters — learning AI deeply and rethinking how engineers ship.
               Open to what's next.
             </motion.p>
 
@@ -152,14 +151,14 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT — IDE-framed portrait */}
+          {/* RIGHT — wireframe portrait */}
           <motion.div
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.35, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[560px] justify-self-center lg:max-w-none"
+            className="relative w-full max-w-[520px] justify-self-center lg:max-w-none"
           >
-            <IDEWindow />
+            <WireframePortrait />
           </motion.div>
         </div>
 

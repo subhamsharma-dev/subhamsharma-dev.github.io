@@ -24,7 +24,6 @@ export const profile = {
 
   // Roles I'm targeting / can fill — used by the hero rotation
   rotatingRoles: [
-    'AI Engineer',
     'Gen AI Engineer',
     'Full Stack Engineer',
     'Backend Engineer',
